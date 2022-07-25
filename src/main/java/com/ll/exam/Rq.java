@@ -1,5 +1,7 @@
 package com.ll.exam;
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -21,6 +23,22 @@ public class Rq {
         }
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=utf-8");
+    }
+
+    public void setAttr(String name, Object value) {
+        req.setAttribute(name, value);
+    }
+
+    public void view(String path) {
+        // gugudan2.jsp 에게 나머지 작업을 토스
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/jsp/" + path + ".jsp");
+        try {
+            requestDispatcher.forward(req, resp);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int getIntParam(String paramName, int defaultValue) {
