@@ -7,13 +7,8 @@ import java.util.List;
 
 public class ArticleRepository {
 
-    private static List<ArticleDto> datum;
-    private static long lastId;
-
-    static {
-        datum = new ArrayList<>();
-        lastId = 0;
-    }
+    private static final List<ArticleDto> datum = new ArrayList<>();
+    private static long lastId = 0;
 
     public long write(String title, String body) {
         long id = ++lastId;
@@ -21,5 +16,10 @@ public class ArticleRepository {
 
         datum.add(newArticleDto);
         return id;
+    }
+
+    // 전체 글 목록 리턴
+    public List<ArticleDto> findAll() {
+        return datum;
     }
 }
