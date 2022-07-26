@@ -23,7 +23,7 @@ public class ArticleRepository {
         return datum;
     }
 
-    public ArticleDto findById(int id) {
+    public ArticleDto findById(long id) {
         for (ArticleDto articleDto : datum) {
             if(articleDto.getId() == id){
                 return articleDto;

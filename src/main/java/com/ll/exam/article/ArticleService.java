@@ -20,7 +20,7 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public ArticleDto findById(int id) {
+    public ArticleDto findById(long id) {
         return articleRepository.findById(id);
     }
 }
