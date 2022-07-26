@@ -13,7 +13,7 @@ import java.io.IOException;
 @WebServlet("/usr/*")
 public class DispatcherServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         Rq rq = new Rq(req, resp);
 
         MemberController memberController = new MemberController();
@@ -22,18 +22,33 @@ public class DispatcherServlet extends HttpServlet {
         // getRequestURI는
         // http://localhost:8081/usr/article/list/free?page=1 에서
         // /usr/article/list/free 부분만 가져온다.
-        String url = req.getRequestURI();
-
-        switch (url) {
-            case "/usr/article/list/free":
-                articleController.showList(rq);
+        switch (rq.getMethod()) {
+            case "GET":
+                switch (rq.getPath()) {
+                    case "/usr/article/list/free":
+                        articleController.showList(rq);
+                        break;
+                    case "/usr/article/write/free":
+                        articleController.showWrite(rq);
+                        break;
+                    case "/usr/member/login":
+                        memberController.showLogin(rq);
+                        break;
+                }
                 break;
-            case "/usr/article/write/free":
-                articleController.showWrite(rq);
-                break;
-            case "/usr/member/login":
-                memberController.showLogin(rq);
+            case "POST":
+                switch (rq.getPath()) {
+                    case "/usr/article/write/free":
+                        articleController.doWrite(rq);
+                        break;
+                }
                 break;
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        // 똑같은 코드의 중복을 막기 위해서 doPost()에서 doGet() 호출!
+        doGet(req, resp);
     }
 }
