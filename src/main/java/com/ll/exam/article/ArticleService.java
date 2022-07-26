@@ -19,4 +19,8 @@ public class ArticleService {
     public List<ArticleDto> findAll() {
         return articleRepository.findAll();
     }
+
+    public ArticleDto findById(int id) {
+        return articleRepository.findById(id);
+    }
 }
