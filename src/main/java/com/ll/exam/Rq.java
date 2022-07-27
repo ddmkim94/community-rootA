@@ -25,22 +25,6 @@ public class Rq {
         resp.setContentType("text/html; charset=utf-8");
     }
 
-    public void setAttr(String name, Object value) {
-        req.setAttribute(name, value);
-    }
-
-    public void view(String path) {
-        // gugudan2.jsp 에게 나머지 작업을 토스
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/jsp/" + path + ".jsp");
-        try {
-            requestDispatcher.forward(req, resp);
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public String getParam(String paramName, String defaultValue) {
         String value = req.getParameter(paramName);
 
@@ -65,9 +49,29 @@ public class Rq {
         }
     }
 
-    public void appendBody(String str) {
+    public void println(String str) {
+        print(str + "\n");
+    }
+
+    public void print(String str) {
         try {
             resp.getWriter().append(str);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setAttr(String name, Object value) {
+        req.setAttribute(name, value);
+    }
+
+    public void view(String path) {
+        // gugudan2.jsp 에게 나머지 작업을 토스
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/jsp/" + path + ".jsp");
+        try {
+            requestDispatcher.forward(req, resp);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,6 +83,7 @@ public class Rq {
 
     public String getActionPath() {
         String[] bits = req.getRequestURI().split("/");
+
         return "/%s/%s/%s".formatted(bits[1], bits[2], bits[3]);
     }
 
@@ -89,14 +94,13 @@ public class Rq {
     public long getLongPathValueByIndex(int index, long defaultValue) {
         String value = getPathValueByIndex(index, null);
 
-        if ( value == null ) {
+        if (value == null) {
             return defaultValue;
         }
 
         try {
             return Long.parseLong(value);
-        }
-        catch ( NumberFormatException e ) {
+        } catch (NumberFormatException e) {
             return defaultValue;
         }
     }
@@ -109,5 +113,38 @@ public class Rq {
         } catch (ArrayIndexOutOfBoundsException e) {
             return defaultValue;
         }
+    }
+
+    public void historyBack(String msg) {
+        if (msg != null && msg.trim().length() > 0) {
+            println("""
+                    <script>
+                    alert("%s");
+                    </script>
+                    """.formatted(msg));
+        }
+
+        println("""
+                <script>
+                history.back();
+                </script>
+                """);
+    }
+
+    public void replace(String uri, String msg) {
+
+        if (msg != null && msg.trim().length() > 0) {
+            println("""
+                    <script>
+                    alert("%s");
+                    </script>
+                    """.formatted(msg));
+        }
+
+        println("""
+                <script>
+                location.replace("%s");
+                </script>
+                """.formatted(uri));
     }
 }
