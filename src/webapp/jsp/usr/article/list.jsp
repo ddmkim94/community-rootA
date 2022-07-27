@@ -5,48 +5,28 @@
 <%
     List<ArticleDto> articles = (List<ArticleDto>) request.getAttribute("articles");
 %>
-<style>
-    .container {
-        text-align: center;
-    }
-    table {
-        margin: 0 auto;
-        border: 1px solid gray;
-        border-collapse: collapse;
-        border-spacing: 0;
-        font-size: 24px;
-    }
 
-    table th, td {
-        padding: 15px;
-        border: 3px solid black;
-    }
+<%@ include file="../common/head.jspf"%>
 
-    th {
-        background-color: cadetblue;
-        color: white;
-        font-weight: bold;
-    }
-</style>
+<!-- 보통 구획은 섹션으로 나눈다. -->
+<section>
+    <!-- container(max-width) : 너비가 너무 넓게 퍼지는 것을 막는다 + 반응형은 잃지 않는다. -->
+    <!-- mx-auto : margin-left:auto; margin-right:auto; -->
+    <div class="container px-3 mx-auto">
+        <h1 class="font-bold text-lg">게시물 리스트</h1>
 
-<div class="container">
-    <h1>게시물 리스트</h1>
-    <table>
-        <tr>
-            <th>#</th>
-            <th>제목</th>
-            <th>내용</th>
-            <th>수정</th>
-            <th>삭제</th>
-        </tr>
-        <% for (ArticleDto article : articles) { %>
-        <tr>
-            <td><a href="/usr/article/detail/free/<%=article.getId()%>"><%=article.getId()%></a></td>
-            <td><%=article.getTitle()%></td>
-            <td><%=article.getBody()%></td>
-            <td><a href="/usr/article/modify/free/<%=article.getId()%>">수정</a></td>
-            <td><a onclick="if( !confirm('정말 삭제하시겠습니까?')) return false;" href="/usr/article/delete/free/<%=article.getId()%>">삭제</a></td>
-        </tr>
-        <% } %>
-    </table>
-</div>
+        <ul class="mt-5">
+            <% for ( ArticleDto article : articles ) { %>
+            <li class="flex">
+                <a class="w-[40px] hover:underline hover:text-[red]" href="/usr/article/detail/free/<%=article.getId()%>"><%=article.getId()%></a>
+                <!-- flex-grow : 성장성 1 -->
+                <a class="flex-grow hover:underline hover:text-[red]" href="/usr/article/detail/free/<%=article.getId()%>"><%=article.getTitle()%></a>
+                <a onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" class="hover:underline hover:text-[red] mr-2" href="/usr/article/delete/free/<%=article.getId()%>">삭제</a>
+                <a class="hover:underline hover:text-[red]" href="/usr/article/modify/free/<%=article.getId()%>">수정</a>
+            </li>
+            <% } %>
+        </ul>
+    </div>
+</section>
+
+<%@ include file="../common/foot.jspf"%>
